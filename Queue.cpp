@@ -58,12 +58,12 @@ Queue::Iterator::Iterator(Element *element)
 
 Queue::Iterator::~Iterator() = default;
 
-Queue::Element* Queue::Iterator::getCurElement()
+Queue::Element *Queue::Iterator::getCurElement()
 {
     return this->curElement;
 }
 
-void Queue::Iterator::setCurElement(Element* element)
+void Queue::Iterator::setCurElement(Element *element)
 {
     this->curElement = element;
 }
@@ -75,7 +75,7 @@ Queue::DATA_TYPE Queue::Iterator::getElement(size_t &size)
         throw Container::Error("Can't give element the iterator points to an empty element");
     }
     size = curElement->getSize();
-    return curElement->getContent();    
+    return curElement->getContent();
 }
 
 void Queue::Iterator::goToNext()
@@ -85,28 +85,28 @@ void Queue::Iterator::goToNext()
         throw Container::Error("no next element");
     }
     curElement->getNext();
-} 
+}
 
 bool Queue::Iterator::hasNext()
 {
     if (curElement == nullptr)
     {
         return false;
-    }  
+    }
     else if (curElement->getNext() == nullptr)
     {
         return false;
     }
-    return true;    
+    return true;
 }
 
-bool Queue::Iterator::equals(Container::Iterator* right)
+bool Queue::Iterator::equals(Container::Iterator *right)
 {
-    if ((dynamic_cast<Iterator*>(right)->curElement == this->curElement))
+    if ((dynamic_cast<Iterator *>(right)->curElement == this->curElement))
     {
         return true;
     }
-    return false;    
+    return false;
 }
 
 void *Queue::allocMem(size_t size)
@@ -143,7 +143,7 @@ int Queue::push(void *elem, size_t size)
 {
     if (_size == 0)
     {
-        if(checkMemory(size))
+        if (checkMemory(size))
         {
             return 1;
         }
@@ -154,7 +154,7 @@ int Queue::push(void *elem, size_t size)
     }
     else
     {
-        if(checkMemory(size))
+        if (checkMemory(size))
         {
             return 1;
         }
@@ -170,7 +170,7 @@ int Queue::push(void *elem, size_t size)
 bool Queue::checkMemory(size_t size)
 {
     size_t allSize = _memory.size() + size;
-    return allSize > max_bytes();    
+    return allSize > max_bytes();
 }
 
 int Queue::pop()
@@ -200,20 +200,20 @@ void *Queue::back(size_t &size)
     return this->_tail->getContent();
 }
 
-int Queue::insert(AbstractQueue::Iterator* iter, DATA_TYPE elem, size_t size)
+int Queue::insert(AbstractQueue::Iterator *iter, DATA_TYPE elem, size_t size)
 {
-    auto iterator = dynamic_cast<Iterator*>(iter);
+    auto iterator = dynamic_cast<Iterator *>(iter);
     if ((iterator->getCurElement() == nullptr))
     {
         return 1;
     }
 
-    Element* catcherElem = iterator->getCurElement();
+    Element *catcherElem = iterator->getCurElement();
     allocMem(sizeof(Element));
     auto newElement = new Element(elem, size);
-    Element* oldNextElement = catcherElem->getNext();
+    Element *oldNextElement = catcherElem->getNext();
     catcherElem->setNext(newElement);
-    newElement->setNext(oldNextElement);    
+    newElement->setNext(oldNextElement);
     iterator->setCurElement(newElement);
     sizeChange(1);
     return 0;
@@ -229,7 +229,7 @@ size_t Queue::max_bytes()
     return _memory.size();
 }
 
-Queue::Iterator* Queue::find(void* elem, size_t size)
+Queue::Iterator *Queue::find(void *elem, size_t size)
 {
     allocMem(sizeof(Iterator));
     auto iterator = new Iterator(_head);
@@ -241,38 +241,38 @@ Queue::Iterator* Queue::find(void* elem, size_t size)
         if ((tempElement == elem) && (tempSize == size))
         {
             return iterator;
-        }        
+        }
     }
     return newIterator();
 }
 
-Queue::Iterator* Queue::newIterator()
+Queue::Iterator *Queue::newIterator()
 {
     allocMem(sizeof(Iterator));
     return new Iterator();
 }
 
-Queue::Iterator* Queue::begin()
+Queue::Iterator *Queue::begin()
 {
     allocMem(sizeof(Iterator));
-    return new Iterator(_head);    
+    return new Iterator(_head);
 }
 
-Queue::Iterator* Queue::end()
+Queue::Iterator *Queue::end()
 {
     allocMem(sizeof(Iterator));
     return new Iterator(_tail);
 }
 
-void Queue::remove(Container::Iterator* iter)
+void Queue::remove(Container::Iterator *iter)
 {
-    if(this->empty())
+    if (this->empty())
     {
         return;
     }
-    auto iterator = dynamic_cast<Iterator*>(iter);
-    Element* previousElement;
-    Element* currentPtr = iterator->getCurElement();
+    auto iterator = dynamic_cast<Iterator *>(iter);
+    Element *previousElement;
+    Element *currentPtr = iterator->getCurElement();
     auto it = begin();
     while (it->getCurElement() != currentPtr)
     {
@@ -296,7 +296,7 @@ void Queue::remove(Container::Iterator* iter)
     else
     {
         iterator->setCurElement(nullptr);
-    }    
+    }
 }
 
 void Queue::clear()
@@ -309,7 +309,7 @@ void Queue::clear()
     while (_head != nullptr)
     {
         pop();
-    }   
+    }
 }
 
 bool Queue::empty()
