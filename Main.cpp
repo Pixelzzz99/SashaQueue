@@ -1,9 +1,9 @@
 #include <iostream>
+#include "Tester.h"
 
 int main()
 {
-    int x;
-    x = 0;
-    std::cout << "Hello World" << std::endl;
-    return 0;
+    Tester test;
+    test.testSimpleTestFrom1To12Elements();
+    return 0;    
 }

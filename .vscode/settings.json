@@ -6,6 +6,8 @@
         "initializer_list": "cpp",
         "utility": "cpp",
         "istream": "cpp",
-        "streambuf": "cpp"
-    }
+        "streambuf": "cpp",
+        "vector": "cpp"
+    },
+    "cquery.cacheDirectory": "${workspaceFolder}/.vscode/cquery_cached_index/"
 }

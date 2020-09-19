@@ -1,4 +1,4 @@
-#include <Queue.h>
+#include "Queue.h"
 
 Queue::Element::Element()
 {
@@ -143,7 +143,7 @@ int Queue::push(void *elem, size_t size)
 {
     if (_size == 0)
     {
-        if (checkMemory(size))
+        if (!checkMemory(size))
         {
             return 1;
         }
@@ -154,7 +154,7 @@ int Queue::push(void *elem, size_t size)
     }
     else
     {
-        if (checkMemory(size))
+        if (!checkMemory(size))
         {
             return 1;
         }
@@ -182,7 +182,6 @@ int Queue::pop()
 
     Element *newHead = _head->getNext();
     freeMem(this->_head);
-    delete this->_head;
     this->_head = newHead;
     sizeChange(-1);
     return 0;
