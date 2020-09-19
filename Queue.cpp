@@ -143,7 +143,10 @@ int Queue::push(void *elem, size_t size)
 {
     if (_size == 0)
     {
-        //add error if size > maxSize
+        if(checkMemory(size))
+        {
+            return 1;
+        }
         allocMem(sizeof(Element));
         Element *newElement = new Element(elem, size);
         this->_tail = newElement;
@@ -151,7 +154,10 @@ int Queue::push(void *elem, size_t size)
     }
     else
     {
-        //add error if size > maxSize
+        if(checkMemory(size))
+        {
+            return 1;
+        }
         allocMem(sizeof(Element));
         Element *newElement = new Element(elem, size);
         this->_tail->setNext(newElement);
@@ -159,6 +165,12 @@ int Queue::push(void *elem, size_t size)
     }
     sizeChange(1);
     return 0;
+}
+
+bool Queue::checkMemory(size_t size)
+{
+    size_t allSize = _memory.size() + size;
+    return allSize > max_bytes();    
 }
 
 int Queue::pop()
@@ -205,6 +217,86 @@ int Queue::insert(AbstractQueue::Iterator* iter, DATA_TYPE elem, size_t size)
     iterator->setCurElement(newElement);
     sizeChange(1);
     return 0;
+}
+
+int Queue::size()
+{
+    return _size;
+}
+
+size_t Queue::max_bytes()
+{
+    return _memory.size();
+}
+
+Queue::Iterator* Queue::find(void* elem, size_t size)
+{
+    allocMem(sizeof(Iterator));
+    auto iterator = new Iterator(_head);
+    while (iterator->hasNext())
+    {
+        iterator->goToNext();
+        size_t tempSize;
+        DATA_TYPE tempElement = iterator->getElement(tempSize);
+        if ((tempElement == elem) && (tempSize == size))
+        {
+            return iterator;
+        }        
+    }
+    return newIterator();
+}
+
+Queue::Iterator* Queue::newIterator()
+{
+    allocMem(sizeof(Iterator));
+    return new Iterator();
+}
+
+Queue::Iterator* Queue::begin()
+{
+    allocMem(sizeof(Iterator));
+    return new Iterator(_head);    
+}
+
+Queue::Iterator* Queue::end()
+{
+    allocMem(sizeof(Iterator));
+    return new Iterator(_tail);
+}
+
+void Queue::remove(Container::Iterator* iter)
+{
+    if(this->empty())
+    {
+        return;
+    }
+    auto iterator = dynamic_cast<Iterator*>(iter);
+    Element* previousElement;
+    Element* currentPtr = iterator->getCurElement();
+    auto it = begin();
+    while (it->getCurElement() != currentPtr)
+    {
+        if (it->hasNext())
+        {
+            if (it->getCurElement()->getNext() == currentPtr)
+            {
+                previousElement = it->getCurElement();
+            }
+            it->goToNext();
+        }
+    }
+    previousElement->setNext(currentPtr->getNext());
+    currentPtr->setNext(nullptr);
+    freeMem(currentPtr);
+    delete currentPtr;
+    if (iterator->hasNext())
+    {
+        iterator->goToNext();
+    }
+    else
+    {
+        iterator->setCurElement(nullptr);
+    }    
 }
 
 void Queue::clear()

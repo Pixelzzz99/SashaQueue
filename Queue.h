@@ -31,6 +31,7 @@ private:
     void *allocMem(size_t size);
     void freeMem(void *ptr);
     void sizeChange(int size);
+    bool checkMemory(size_t size);
 
 public:
     class Iterator : public AbstractQueue::Iterator
