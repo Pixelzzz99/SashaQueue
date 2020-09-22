@@ -124,21 +124,21 @@ int Tester::testOn10000FirstElements()
     vector<int> vt(10000);
     std::iota(vt.begin(), vt.end(), 0);
     int i = 0;
-    std::cout<<"add 10 000 push in our queue"<<std::endl;
+    std::cout << "add 10 000 push in our queue" << std::endl;
     const unsigned time = clock();
-    for(auto &v: vt)
+    for (auto &v : vt)
     {
         i++;
         if (queue.push(&v, i) == 1)
         {
-            std::cout<<"push "<<v<<" fail"<<std::endl;
+            std::cout << "push " << v << " fail" << std::endl;
             return testFailed(testName);
         }
     }
-    std::cout<<"time to add 10 000 elements = "<< (double)(clock() - time) / CLOCKS_PER_SEC << std::endl;
-    std::cout<<"added 10 000 elements : Done"<<std::endl;
+    std::cout << "time to add 10 000 elements = " << (double)(clock() - time) / CLOCKS_PER_SEC << std::endl;
+    std::cout << "added 10 000 elements : Done" << std::endl;
 
-    std::cout<<"checking for the existence of added elements"<<std::endl;
+    std::cout << "checking for the existence of added elements" << std::endl;
     Queue::Iterator *iterator = queue.begin();
     int counter = 0;
     while (iterator->hasNext())
@@ -146,25 +146,25 @@ int Tester::testOn10000FirstElements()
         iterator->goToNext();
         size_t size;
         iterator->getElement(size);
-        int v =*static_cast<int*>(iterator->getElement(size));
+        int v = *static_cast<int *>(iterator->getElement(size));
         if (vt[counter++] != v)
         {
-            std::cout<<"Error in comparing values with "<<counter<<std::endl;
+            std::cout << "Error in comparing values with " << counter << std::endl;
             return testFailed(testName);
         }
     }
-    std::cout<<"checking elements : Done"<<std::endl;
+    std::cout << "checking elements : Done" << std::endl;
 
-    std::cout<<"Comparing the values"<<std::endl;
+    std::cout << "Comparing the values" << std::endl;
     iterator = queue.begin();
     Queue::Iterator *newIterator = queue.begin();
-    while(iterator->hasNext())
+    while (iterator->hasNext())
     {
         iterator->goToNext();
         newIterator->goToNext();
         if (iterator->equals(newIterator))
         {
-            std::cout<<"error with equal"<<std::endl;
+            std::cout << "error with equal" << std::endl;
             return testFailed(testName);
         }
     }
@@ -179,22 +179,22 @@ int Tester::testOn10000000RootChild()
     vector<int> vt(N);
     iota(vt.begin(), vt.end(), 0);
 
-    std::cout<<"Add 10 mln elements"<<std::endl;
+    std::cout << "Add 10 mln elements" << std::endl;
     unsigned int time = clock();
-    for(auto& v : vt)
+    for (auto &v : vt)
     {
         if (queue.push(&v, 0) == 1)
         {
-            std::cout<<"insert "<<v<<" failed"<<std::endl;
+            std::cout << "insert " << v << " failed" << std::endl;
             return testFailed(testName);
         }
     }
-    std::cout<<"time to add 10 elements = "<<(double)(clock()-time)/CLOCKS_PER_SEC<<std::endl;
-    std::cout<<"add 10 mln elements : Done"<<std::endl;
-    
+    std::cout << "time to add 10 elements = " << (double)(clock() - time) / CLOCKS_PER_SEC << std::endl;
+    std::cout << "add 10 mln elements : Done" << std::endl;
+
     std::cout << "passage through our queue and remove every element from end" << std::endl;
     Queue::Iterator *iterator = queue.begin();
-    int index = N-1;
+    int index = N - 1;
     time = clock();
     while (iterator->hasNext())
     {
@@ -202,54 +202,54 @@ int Tester::testOn10000000RootChild()
         queue.remove(iterator);
         index--;
         size_t size;
-        int v = *static_cast<int*>(iterator->getElement(size));
+        int v = *static_cast<int *>(iterator->getElement(size));
         if (index < 0)
         {
-            std::cout<<"Error in deleting"<<std::endl;
+            std::cout << "Error in deleting" << std::endl;
             return testFailed(testName);
         }
         if (vt[index] != v)
         {
-            std::cout<<"error in comparing values with "<<vt[index]<<" "<<v<<std::endl;
+            std::cout << "error in comparing values with " << vt[index] << " " << v << std::endl;
             return testFailed(testName);
         }
-        std::cout<<"time to passage 10 mln items = "<<(double)(clock() -time)/CLOCKS_PER_SEC<<std::endl;
+        std::cout << "time to passage 10 mln items = " << (double)(clock() - time) / CLOCKS_PER_SEC << std::endl;
         return testPassed(testName);
-    }  
-} 
+    }
+}
 
 int Tester::testGap()
 {
     string testName = "Gap from sm to sm";
     Mem mem(10000);
     Queue queue(mem);
-    Queue::Iterator* iterator = queue.newIterator();
+    Queue::Iterator *iterator = queue.newIterator();
     vector<int> vt(10000);
     std::iota(vt.begin(), vt.end(), 0);
     int i = 0;
-    std::cout<<"add 10000 elements in our tree"<<std::endl;
+    std::cout << "add 10000 elements in our tree" << std::endl;
     unsigned int time = clock();
-    for(auto &v : vt)
+    for (auto &v : vt)
     {
         i++;
         if (queue.push(&v, i) == 1)
         {
-            std::cout<<"insert "<<v<<" fail"<<std::endl;
+            std::cout << "insert " << v << " fail" << std::endl;
             return testFailed(testName);
         }
     }
 
-    std::cout<<"time to add 10 000 elements = "<<(double)(clock()-time)/CLOCKS_PER_SEC<<std::endl;
-    std::cout<<"added 10000 elements : Done"<<std::endl;
+    std::cout << "time to add 10 000 elements = " << (double)(clock() - time) / CLOCKS_PER_SEC << std::endl;
+    std::cout << "added 10000 elements : Done" << std::endl;
 
     iterator = queue.begin();
     const int GAP_START = 57;
     const int GAP_END = 5648;
 
-    cout<<"size before removal = "<<queue.size()<<std::endl;
+    cout << "size before removal = " << queue.size() << std::endl;
     time = clock();
     int i = 0;
-    while(iterator->hasNext())
+    while (iterator->hasNext())
     {
         iterator->goToNext();
         if ((i > GAP_START) && (i < GAP_END))
@@ -259,34 +259,33 @@ int Tester::testGap()
         i++;
     }
 
-    std::cout << "time to remove items from point "<< GAP_START <<" to "<< GAP_END << " = " << (double)(clock() - time) / CLOCKS_PER_SEC << std::endl;
-	std::cout<< "size after removal = " << queue.size() << std::endl;
-	std::cout << "passage through our queue" << std::endl;
-	std::cout << "Test Gap : done" << std::endl;
+    std::cout << "time to remove items from point " << GAP_START << " to " << GAP_END << " = " << (double)(clock() - time) / CLOCKS_PER_SEC << std::endl;
+    std::cout << "size after removal = " << queue.size() << std::endl;
+    std::cout << "passage through our queue" << std::endl;
+    std::cout << "Test Gap : done" << std::endl;
 }
-
 
 int Tester::testCheckExceptionIteratorBlock()
 {
-	string test_name = "Test check empty Iterator";
-	Mem mem(100);
-	Queue queue(mem);
-	try
-	{
-		std::cout << "check our Iterator throught Error block" << std::endl;
-		Queue::Iterator* iterator = queue.newIterator();
-		size_t size;
-		iterator->getElement(size);
-	}
-	catch (Container::Error e)
-	{
-		std::cout << "Our Iterator hit the exception block" << std::endl;
-		string s_error = "Can't give an item because the iterator points to an empty element";
-		if (s_error != e.msg)
-		{
-			std::cout << "other error" << std::endl;
-			return testFailed(test_name);
-		}
-	}
-	return testPassed(test_name);
+    string test_name = "Test check empty Iterator";
+    Mem mem(100);
+    Queue queue(mem);
+    try
+    {
+        std::cout << "check our Iterator throught Error block" << std::endl;
+        Queue::Iterator *iterator = queue.newIterator();
+        size_t size;
+        iterator->getElement(size);
+    }
+    catch (Container::Error e)
+    {
+        std::cout << "Our Iterator hit the exception block" << std::endl;
+        string s_error = "Can't give an item because the iterator points to an empty element";
+        if (s_error != e.msg)
+        {
+            std::cout << "other error" << std::endl;
+            return testFailed(test_name);
+        }
+    }
+    return testPassed(test_name);
 }
