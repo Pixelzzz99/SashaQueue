@@ -10,7 +10,8 @@ private:
 public:
     int testSimpleTestFrom1To12Elements();
     int testOn10000FirstElements();
-    int testOn10000000RootChild();
+    int testOn10000000Elements();
     int testGap();
+    int testRemoveOddElements();
     int testCheckExceptionIteratorBlock();
 };

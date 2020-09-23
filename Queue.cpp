@@ -54,6 +54,7 @@ Queue::Iterator::Iterator()
 Queue::Iterator::Iterator(Element *element)
 {
     this->curElement = element;
+    this->curElement->setSize(element->getSize());
 }
 
 Queue::Iterator::~Iterator() = default;
@@ -66,6 +67,7 @@ Queue::Element *Queue::Iterator::getCurElement()
 void Queue::Iterator::setCurElement(Element *element)
 {
     this->curElement = element;
+
 }
 
 Queue::DATA_TYPE Queue::Iterator::getElement(size_t &size)
@@ -84,7 +86,7 @@ void Queue::Iterator::goToNext()
     {
         throw Container::Error("no next element");
     }
-    curElement->getNext();
+    curElement = curElement->getNext();
 }
 
 bool Queue::Iterator::hasNext()
@@ -143,7 +145,7 @@ int Queue::push(void *elem, size_t size)
 {
     if (_size == 0)
     {
-        if (!checkMemory(size))
+        if (checkMemory(size))
         {
             return 1;
         }
@@ -154,7 +156,7 @@ int Queue::push(void *elem, size_t size)
     }
     else
     {
-        if (!checkMemory(size))
+        if (checkMemory(size))
         {
             return 1;
         }
@@ -169,8 +171,8 @@ int Queue::push(void *elem, size_t size)
 
 bool Queue::checkMemory(size_t size)
 {
-    size_t allSize = _memory.size() + size;
-    return allSize > max_bytes();
+    size_t allSize = _memory.size() - size;
+    return allSize < 0;
 }
 
 int Queue::pop()
@@ -234,15 +236,15 @@ Queue::Iterator *Queue::find(void *elem, size_t size)
     auto iterator = new Iterator(_head);
     while (iterator->hasNext())
     {
-        iterator->goToNext();
         size_t tempSize;
         DATA_TYPE tempElement = iterator->getElement(tempSize);
         if ((tempElement == elem) && (tempSize == size))
         {
             return iterator;
         }
+        iterator->goToNext();
     }
-    return newIterator();
+    return iterator;
 }
 
 Queue::Iterator *Queue::newIterator()
@@ -280,17 +282,23 @@ void Queue::remove(Container::Iterator *iter)
             if (it->getCurElement()->getNext() == currentPtr)
             {
                 previousElement = it->getCurElement();
+                break;
             }
             it->goToNext();
         }
+        else
+        {
+            return;
+        }
     }
-    previousElement->setNext(currentPtr->getNext());
+    Element *nextElement = currentPtr->getNext();
+    previousElement->setNext(nextElement);
     currentPtr->setNext(nullptr);
-    freeMem(currentPtr);
-    delete currentPtr;
+    freeMem(currentPtr);    
+    sizeChange(-1);
     if (iterator->hasNext())
     {
-        iterator->goToNext();
+        iterator->setCurElement(nextElement);
     }
     else
     {
